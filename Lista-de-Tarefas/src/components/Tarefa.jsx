@@ -1,9 +1,9 @@
-import { useState } from "react"
+import { useEffect, useState, memo} from "react"
 import './cssComponente/tarefa.css'
 
 function Tarefa ({texto}){
 
-    const [concluida, setConcluida] = useState(false)
+    const [concluida, setConcluida] = useState(false);
 
     const alternar = () => {
         setConcluida(!concluida);
@@ -16,4 +16,5 @@ function Tarefa ({texto}){
     )
 }
 
-export default Tarefa
+//utiliza o memo para impedir a re-rendiração de um componente executando ele somente qquando alterado
+export default  memo(Tarefa)

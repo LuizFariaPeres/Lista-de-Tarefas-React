@@ -8,11 +8,12 @@ import Tarefa from './components/Tarefa'
 // Importa o componente Tarefa, responsável por renderizar cada item da lista.
 
 import './components/App.css'
+import { useInput } from './Hooks/useInput'
 // Importa o arquivo de estilos CSS associado ao app.
 
 
 // URL da API crudcrud onde as tarefas serão salvas e lidas.
-const API_URL = 'https://crudcrud.com/api/4528314d11564d00b66365b6e6eeceb9/tarefas';
+const API_URL = 'https://crudcrud.com/api/7ef7beec6c49490888d093887a796179/tarefas';
 
 
 function App() {
@@ -21,9 +22,10 @@ function App() {
   // Inicialmente vazio, pois as tarefas só chegam da API.
   const [lista, setLista] = useState([])
 
-  // Estado para armazenar o texto digitado no input.
-  const [name, setName] = useState('')
+  //Variavel que armazena o Hook personalizado
+  const tarefa = useInput();
 
+  
 
   // useEffect roda logo que o componente App é montado na tela.
   // Aqui buscamos os dados da API pela primeira vez.
@@ -42,13 +44,13 @@ function App() {
   const handleSubmit = (e) =>{
     e.preventDefault();                           // Impede o recarregamento da página.
 
-    if(name.trim() === ''){                       // Verifica se o campo está vazio.
+    if(tarefa.valor === ''){                       // Verifica se o campo está vazio.
       alert('Campo Obrigatório');
       return;                                     // Sai da função sem fazer nada.
     }
 
     // Cria um objeto representando a nova tarefa.
-    const novaTarefa = {name: name.trim()};
+    const novaTarefa = {name: tarefa.valor};
 
     // Envia a nova tarefa para a API com POST.
     fetch(API_URL, {
@@ -62,7 +64,7 @@ function App() {
         setLista([...lista, tarefaCriada]);
 
         // Limpa o campo do input.
-        setName('');
+        tarefa.limpar();
       })
       .catch(error => console.error(              // Caso o POST falhe.
         'Erro ao buscar tarefas', 
@@ -86,8 +88,8 @@ function App() {
         <input 
           type="text" 
           placeholder="Digite sua tarefa" 
-          value={name} 
-          onChange={(e) => setName(e.target.value)} // Atualiza o estado conforme o usuário digita.
+          value={tarefa.valor} 
+          onChange={tarefa.onChange} // Atualiza o estado conforme o usuário digita.
         />
 
         <button type="submit">Adicionar</button>
